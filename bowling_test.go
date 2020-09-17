@@ -18,15 +18,9 @@ func TestBowling_PerfectGame(t *testing.T) {
 	_TestBowling(t, RollMany(12, allPins), AssertScore(300))
 }
 
-func Roll(pins int) BowlingFixtureOption {
-	return RollMany(1, pins)
-}
-func RollSpare() BowlingFixtureOption {
-	return RollMany(2, 5)
-}
-func RollStrike() BowlingFixtureOption {
-	return Roll(allPins)
-}
+func Roll(pins int) BowlingFixtureOption { return RollMany(1, pins) }
+func RollSpare() BowlingFixtureOption    { return RollMany(2, 5) }
+func RollStrike() BowlingFixtureOption   { return Roll(allPins) }
 func RollMany(times int, pins int) BowlingFixtureOption {
 	return func(this *BowlingFixture) {
 		for ; times > 0; times-- {
@@ -38,13 +32,13 @@ func AssertScore(expected int) BowlingFixtureOption {
 	return func(this *BowlingFixture) {
 		actual := this.game.CalculateScore()
 		if !(actual == expected) {
+			this.Helper()
 			this.Error(expected, actual)
 		}
 	}
 }
 
 func _TestBowling(t *testing.T, options ...BowlingFixtureOption) {
-	t.Parallel()
 	fixture := &BowlingFixture{T: t, game: new(BowlingGame)}
 	for _, option := range options {
 		option(fixture)
@@ -55,6 +49,7 @@ type (
 	BowlingFixtureOption func(this *BowlingFixture)
 	BowlingFixture       struct {
 		*testing.T
+
 		game *BowlingGame
 	}
 )
