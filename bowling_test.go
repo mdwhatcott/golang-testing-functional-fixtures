@@ -1,9 +1,6 @@
 package example
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
 
 func TestBowling(t *testing.T) {
 	cases := map[string][]BowlingFixtureOption{
@@ -13,8 +10,8 @@ func TestBowling(t *testing.T) {
 		"strike":      {RollStrike(), Roll(3), Roll(4), AssertScore(24)},
 		"perfection":  {RollMany(12, allPins), AssertScore(300)},
 	}
-	for i, options := range cases {
-		t.Run(fmt.Sprint(i), func(t *testing.T) {
+	for name, options := range cases {
+		t.Run(name, func(t *testing.T) {
 			fixture := &BowlingFixture{T: t, game: new(BowlingGame)}
 			for _, option := range options {
 				option(fixture)
@@ -42,10 +39,8 @@ func AssertScore(expected int) BowlingFixtureOption {
 	}
 }
 
-type (
-	BowlingFixtureOption func(this *BowlingFixture)
-	BowlingFixture       struct {
-		*testing.T
-		game *BowlingGame
-	}
-)
+type BowlingFixtureOption func(this *BowlingFixture)
+type BowlingFixture struct {
+	*testing.T
+	game *BowlingGame
+}

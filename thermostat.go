@@ -1,10 +1,10 @@
 package example
 
 type (
-	gauge interface {
+	Gauge interface {
 		CurrentTemperature() int // Current ambient temperature rounded to the nearest degree (Fahrenheit).
 	}
-	hvac interface {
+	HVAC interface {
 		SetBlower(state bool) // Turns the blower on or off.
 		SetCooler(state bool) // Turns the cooler on or off.
 		SetHeater(state bool) // Turns the heater on or off.
@@ -16,14 +16,14 @@ type (
 )
 
 type Thermostat struct {
-	hvac  hvac
-	gauge gauge
+	hvac  HVAC
+	gauge Gauge
 
 	blowerDelay int
 	coolerDelay int
 }
 
-func NewThermostat(hvac hvac, gauge gauge) *Thermostat {
+func NewThermostat(hvac HVAC, gauge Gauge) *Thermostat {
 	hvac.SetBlower(false)
 	hvac.SetCooler(false)
 	hvac.SetHeater(false)
