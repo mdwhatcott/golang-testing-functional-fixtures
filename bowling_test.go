@@ -1,17 +1,42 @@
 package example
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 func TestBowling(t *testing.T) {
-	cases := map[string][]BowlingFixtureOption{
-		"gutter-game": {RollMany(20, 0), AssertScore(0)},
-		"all-ones":    {RollMany(20, 1), AssertScore(20)},
-		"spare":       {RollSpare(), Roll(3), Roll(1), AssertScore(17)},
-		"strike":      {RollStrike(), Roll(3), Roll(4), AssertScore(24)},
-		"perfection":  {RollMany(12, allPins), AssertScore(300)},
+	var cases = map[string][]BowlingFixtureOption{
+		"gutter game": {
+			RollMany(20, 0),
+			AssertScore(0),
+		},
+		"all ones": {
+			RollMany(20, 1),
+			AssertScore(20),
+		},
+		"spare": {
+			RollSpare(),
+			Roll(3),
+			Roll(1),
+			AssertScore(17),
+		},
+		"strike": {
+			RollStrike(),
+			Roll(3),
+			Roll(4),
+			AssertScore(24),
+		},
+		"perfection": {
+			RollMany(12, allPins),
+			AssertScore(300),
+		},
 	}
 	for name, options := range cases {
 		t.Run(name, func(t *testing.T) {
+			if strings.HasPrefix(name, "SKIP") {
+				t.SkipNow()
+			}
 			fixture := &BowlingFixture{T: t, game: new(BowlingGame)}
 			for _, option := range options {
 				option(fixture)
